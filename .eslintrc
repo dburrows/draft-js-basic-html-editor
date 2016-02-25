@@ -1,0 +1,29 @@
+{
+    "rules": {
+        "indent": [ 2, 2, {"SwitchCase": 1} ],
+        "quotes": 0,
+        "linebreak-style": [ 2, "unix" ],
+        "semi": [ 2, "always" ],
+        "no-console": 0,
+        "valid-jsdoc": 2,
+        "react/jsx-uses-react": 2,
+        "react/jsx-uses-vars": 2,
+        "react/react-in-jsx-scope": 2,
+    },
+    globals: {
+    },
+    "env": {
+        "es6": true,
+        "node": true,
+        "browser": true,
+        "mocha": true
+    },
+    "extends": "eslint:recommended",
+    "ecmaFeatures": {
+        "jsx": true,
+        "modules": true,
+    },
+    "plugins": [
+        "react"
+    ]
+}
