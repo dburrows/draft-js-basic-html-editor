@@ -18,7 +18,6 @@ let inlineTagMap = {
 };
 
 export default function(raw) {
-  let content = '';
   let html = '';
 
 
@@ -26,60 +25,42 @@ export default function(raw) {
     html += blockTagMap[block.type] ?
       blockTagMap[block.type].replace('%content%', processInlineStyles(block)) :
       blockTagMap['default'].replace('%content%', processInlineStyles(block));
-  })
+  });
   return html;
 
 }
 
 function processInlineStyles(block) {
-  if (block.inlineStyleRanges.length === 0) { return block.text }
+  if (block.inlineStyleRanges.length === 0) { return block.text; }
   
-  let html = block.text
-  let tagInsertMap = [] 
+  let html = block.text;
+  let tagInsertMap = [];
+  let nestLevel = [];
 
   // map all the tag insertions we're going to do
   block.inlineStyleRanges.forEach(function(range) {
     let tag = inlineTagMap[range.style];
-    tagInsertMap.push([ range.offset, tag[0] ])
+    tagInsertMap.push([ range.offset, tag[0] ]);
     if (tag[1]) {
-      tagInsertMap.push([ range.offset+range.length, tag[1]])
+      tagInsertMap.push([ range.offset+range.length, tag[1]]);
     }
-  })
+  });
 
   // sort on position, as we'll need to keep track of offset
   tagInsertMap.sort(function(a, b) {
-    if (a[0] > b[0]) { return 1; };
-    if (a[0] < b[0]) { return -1; };
+    if (a[0] > b[0]) { return 1; }
+    if (a[0] < b[0]) { return -1; }
     return 0;
-  })
+  });
 
   // insert tags, keep track of offset caused by our text insertions
   let offset = 0;
   tagInsertMap.forEach(function(insertion) {
-    console.log(insertion)
     html = html.substr(0, offset+insertion[0]) + 
       insertion[1] + 
       html.substr(offset+insertion[0]);
     offset += insertion[1].length;
-  })
+  });
+  
   return html;
 }
-
-
-// "inlineStyleRanges": [
-//         {
-//           "offset": 23,
-//           "length": 7,
-//           "style": "BOLD"
-//         },
-//         {
-//           "offset": 5,
-//           "length": 4,
-//           "style": "ITALIC"
-//         },
-//         {
-//           "offset": 35,
-//           "length": 4,
-//           "style": "ITALIC"
-//         }
-//       ],

@@ -8,7 +8,7 @@ let html = `
   <h1>This is a Title</h1>
   <p>Here's some text, it's useful</p>
   <p>More text, some inline <strong>styling</strong> for <em>some</em> elements</p>
-`
+`;
 
 class BasicHtmlEditorExample extends React.Component {
   constructor(props) {
@@ -19,19 +19,23 @@ class BasicHtmlEditorExample extends React.Component {
   }
 
   updateHtml(html) {
-    console.log('change', html)
+    console.log('change', html);
     this.setState({
       html
-    })
+    });
   }
 
   render() {
     return (
       <div>
         <BasicHtmlEditor value={ this.state.html } onChange={ (html) => this.updateHtml(html) }/>
-        <div dangerouslySetInnerHTML={{ __html: this.state.html }} />
+        <div style={{ margin: '30px 10px 10px 10px' }}>
+          <code>Exported HTML</code>
+          <hr/>
+          <div dangerouslySetInnerHTML={{ __html: this.state.html }} />
+        </div>
       </div>
-    )
+    );
   }
 
 }
