@@ -14,7 +14,7 @@ Extends the Rich example from the Draft repo to accept html as its input format,
 
 * Block support ✔️ 
 * Inline tag support ✔️
-* Handle Lists with more than one element! ;)
+* Handle Lists with more than one element  ✔️
 * Tests
 * Links
 * Images
