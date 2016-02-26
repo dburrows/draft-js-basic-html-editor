@@ -4,8 +4,8 @@ let blockTagMap = {
   'unstyled': `<p>%content%</p>\n`,
   'code-block': `<code>%content%</code>\n`,
   'blockquote': `<blockquote>%content%</blockquote>\n`,
-  'ordered-list-item': `<ol><li>%content%</li></ol>\n`,
-  'unordered-list-item': `<ul><li>%content%</li></ul>\n`,
+  'ordered-list-item': `<li>%content%</li>\n`,
+  'unordered-list-item': `<li>%content%</li>\n`,
   'default': `<p>%content%</p>\n`
 };
 
@@ -17,11 +17,29 @@ let inlineTagMap = {
   'default': ['<span>','</span>']
 };
 
+let nestedTagMap = {
+  'ordered-list-item': ['<ol>', '</ol>'],
+  'unordered-list-item': ['<ul>', '</ul>']
+};
+
 export default function(raw) {
   let html = '';
-
+  let nestLevel = [];
 
   raw.blocks.forEach(function(block) {
+
+    // open tag if nested
+    if (nestLevel.length > 0 && nestLevel[0] !== block.type) {
+      let type = nestLevel.shift();
+      html += nestedTagMap[type][1]; 
+    }
+
+    // close tag is note consecutive same nested
+    if ( nestedTagMap[block.type] && nestLevel[0] !== block.type) {
+      html += nestedTagMap[block.type][0]; 
+      nestLevel.unshift(block.type);
+    } 
+
     html += blockTagMap[block.type] ?
       blockTagMap[block.type].replace('%content%', processInlineStyles(block)) :
       blockTagMap['default'].replace('%content%', processInlineStyles(block));
@@ -35,7 +53,6 @@ function processInlineStyles(block) {
   
   let html = block.text;
   let tagInsertMap = [];
-  let nestLevel = [];
 
   // map all the tag insertions we're going to do
   block.inlineStyleRanges.forEach(function(range) {
