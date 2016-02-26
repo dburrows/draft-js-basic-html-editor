@@ -12,7 +12,7 @@ module.exports = {
   },
   entry: {
     example: [
-      'webpack-dev-server/client?http://localhost:9090',
+      'webpack-dev-server/client?http://localhost:3002',
       'webpack/hot/only-dev-server',
       "./example/index.js"
     ]
@@ -20,7 +20,7 @@ module.exports = {
   output: {
     path: './lib',
     filename: "bundle.js",
-    publicPath: "http://localhost:9090/lib/"
+    publicPath: "http://localhost:3002/lib/"
   },
   plugins: [
     new webpack.HotModuleReplacementPlugin(),

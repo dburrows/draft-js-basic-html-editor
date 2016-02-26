@@ -4,7 +4,7 @@ import {Editor, EditorState, ContentState, RichUtils, convertToRaw} from 'draft-
 import htmlToContent from './utils/htmlToContent';
 import draftRawToHtml from './utils/draftRawToHtml';
 
-export default class RichTextEditor extends React.Component {
+export default class BasicHtmlEditor extends React.Component {
   constructor(props) {
     super(props);
     let { value } = props;
@@ -22,7 +22,7 @@ export default class RichTextEditor extends React.Component {
       let raw = convertToRaw( editorState.getCurrentContent() );
       let html = draftRawToHtml(raw);
       console.log(JSON.stringify(raw, null, 2));
-      console.log(html);
+      this.props.onChange(html);
     };
 
     this.handleKeyCommand = (command) => this._handleKeyCommand(command);
@@ -159,6 +159,7 @@ const BlockStyleControls = (props) => {
     <div className="RichEditor-controls">
       {BLOCK_TYPES.map((type) =>
         <StyleButton
+          key={type.label}
           active={type.style === blockType}
           label={type.label}
           onToggle={props.onToggle}
@@ -182,6 +183,7 @@ const InlineStyleControls = (props) => {
     <div className="RichEditor-controls">
       {INLINE_STYLES.map(type =>
         <StyleButton
+          key={type.label}
           active={currentStyle.has(type.style)}
           label={type.label}
           onToggle={props.onToggle}
