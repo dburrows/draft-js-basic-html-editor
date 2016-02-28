@@ -18,11 +18,15 @@ export default class BasicHtmlEditor extends React.Component {
 
     // this.focus = () => this.refs.editor.focus();
     this.onChange = (editorState) => {
+      let previousContent = this.state.editorState.getCurrentContent();
       this.setState({editorState});
-      let raw = convertToRaw( editorState.getCurrentContent() );
-      let html = draftRawToHtml(raw);
-      console.log(JSON.stringify(raw, null, 2));
-      this.props.onChange(html);
+
+      // only emit html when content changes
+      if( previousContent !== editorState.getCurrentContent() ) {
+        let raw = convertToRaw( editorState.getCurrentContent() );
+        let html = draftRawToHtml(raw);
+        this.props.onChange(html);  
+      }
     };
 
     this.handleKeyCommand = (command) => this._handleKeyCommand(command);
