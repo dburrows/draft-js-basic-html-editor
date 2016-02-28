@@ -19,7 +19,7 @@ class BasicHtmlEditorExample extends React.Component {
   }
 
   updateHtml(html) {
-    console.log('change', html);
+    console.log('HTML change: ', html);
     this.setState({
       html
     });
