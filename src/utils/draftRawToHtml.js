@@ -1,4 +1,4 @@
-import processInlineStyles from './processInlineStyles';
+import processInlineStylesAndEntities from './processInlineStylesAndEntities';
 
 let blockTagMap = {
   'header-one': `<h1>%content%</h1>\n`,
@@ -49,11 +49,11 @@ export default function(raw) {
     html += blockTagMap[block.type] ?
       blockTagMap[block.type].replace(
         '%content%',
-        processInlineStyles(inlineTagMap, entityTagMap, raw.entityMap, block)
+        processInlineStylesAndEntities(inlineTagMap, entityTagMap, raw.entityMap, block)
       ) :
       blockTagMap['default'].replace(
         '%content%',
-        processInlineStyles(inlineTagMap, block)
+        processInlineStylesAndEntities(inlineTagMap, block)
       );
   });
   return html;

@@ -1,6 +1,7 @@
-import template from 'lodash-es/template';
+import template from 'lodash/string/template';
+import sortBy from 'lodash/collection/sortBy';
 
-export default function processInlineStyles(inlineTagMap, entityTagMap, entityMap, block) {
+export default function processInlineStylesAndEntities(inlineTagMap, entityTagMap, entityMap, block) {
   if (!block.inlineStyleRanges && !block.entityRanges) {
     //TODO: optimisation, exit early if length === 0 as well
     return block.text;
@@ -9,8 +10,9 @@ export default function processInlineStyles(inlineTagMap, entityTagMap, entityMa
   let html = block.text;
   let tagInsertMap = {};
 
+  let sortedRanges = sortBy(block.inlineStyleRanges, 'offset');
   // map all the tag insertions we're going to do
-  block.inlineStyleRanges.forEach(function(range) {
+  sortedRanges.forEach(function(range) {
     let tag = inlineTagMap[range.style];
 
     if (!tagInsertMap[range.offset]) { tagInsertMap[range.offset] = []; }
@@ -23,9 +25,9 @@ export default function processInlineStyles(inlineTagMap, entityTagMap, entityMa
     }
   });
 
-  // HERE
+  // SORT BEFORE PROCESSING
   block.entityRanges.forEach(function(range) {
-    let entity = entityMap[range.key]
+    let entity = entityMap[range.key];
     let tag = entityTagMap[entity.type];
 
     let compiledTag0 = template(tag[0])(entity.data);
