@@ -28,7 +28,7 @@ let overlappingInlineStyles = {
 describe('processInlineStyles', function () {
 
   it('should order blocks correctly', function() {
-    let html = processInlineStyles(inlineTagMap, overlappingInlineStyles);
+    let html = processInlineStyles(inlineTagMap, {}, {}, overlappingInlineStyles);
 
     expect(html).to.equal('Here\'s some <strong>text, it\'s <em>useful</em></strong>');
   });

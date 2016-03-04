@@ -1,6 +1,5 @@
 import processInlineStyles from './processInlineStyles';
 
-
 let blockTagMap = {
   'header-one': `<h1>%content%</h1>\n`,
   'header-two': `<h1>%content%</h1>\n`,
@@ -18,6 +17,10 @@ let inlineTagMap = {
   'UNDERLINE': ['<u>','</u>'],
   'CODE': ['<code>','</code>'],
   'default': ['<span>','</span>']
+};
+
+let entityTagMap = {
+  'link': ['<a href="<%= href %>">', '</a>']
 };
 
 let nestedTagMap = {
@@ -44,8 +47,14 @@ export default function(raw) {
     }
 
     html += blockTagMap[block.type] ?
-      blockTagMap[block.type].replace('%content%', processInlineStyles(inlineTagMap, block)) :
-      blockTagMap['default'].replace('%content%', processInlineStyles(inlineTagMap, block));
+      blockTagMap[block.type].replace(
+        '%content%',
+        processInlineStyles(inlineTagMap, entityTagMap, raw.entityMap, block)
+      ) :
+      blockTagMap['default'].replace(
+        '%content%',
+        processInlineStyles(inlineTagMap, block)
+      );
   });
   return html;
 
