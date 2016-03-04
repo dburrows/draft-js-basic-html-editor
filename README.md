@@ -11,6 +11,10 @@ Block tags: `<p> <h1> <h2> <blockquote> <ul> <ol> <code>`
 
 Inline tags: `<strong> <em> <u> <code>`
 
+### Demo
+
+http://dburrows.github.io/draft-js-basic-html-editor/example-dist/
+
 #### Development
 
     $ npm install
