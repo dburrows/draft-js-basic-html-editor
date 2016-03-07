@@ -9,13 +9,21 @@ Extends the Rich example from the Draft repo to accept html as its input format,
 
 Block tags: `<p> <h1> <h2> <blockquote> <ul> <ol> <code>`
 
-Inline tags: `<strong> <em> <u> <code>`
+Inline tags: `<strong> <em> <u> <code> <del>`
 
-### Install
+### Install & Usage
 
 Currently this package is provided as a ES6 module only, just require from an ES6 module aware environment like Babel-compiled code.
 
     $ npm install draft-js-basic-html-editor
+
+If you're using Webpack, you're probably excluding `node_modules` from your Babel loader, just add an exception
+
+    {
+      test: /node_modules\/draft-js-basic-html-editor\//,
+      loaders: ["babel-loader"]
+    }
+
 
 ### Demo
 
