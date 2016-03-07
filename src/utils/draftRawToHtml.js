@@ -16,6 +16,7 @@ let inlineTagMap = {
   'ITALIC': ['<em>','</em>'],
   'UNDERLINE': ['<u>','</u>'],
   'CODE': ['<code>','</code>'],
+  'STRIKETHROUGH': ['<del>', '</del>'],
   'default': ['<span>','</span>']
 };
 
