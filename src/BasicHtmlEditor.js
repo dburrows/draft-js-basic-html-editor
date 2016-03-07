@@ -39,7 +39,8 @@ export default class BasicHtmlEditor extends React.Component {
       {label: 'Bold', style: 'BOLD'},
       {label: 'Italic', style: 'ITALIC'},
       {label: 'Underline', style: 'UNDERLINE'},
-      {label: 'Monospace', style: 'CODE'}
+      {label: 'Monospace', style: 'CODE'},
+      {label: 'Strikethrough', style: 'STRIKETHROUGH'}
     ];
 
     this.BLOCK_TYPES = [
