@@ -11,6 +11,12 @@ Block tags: `<p> <h1> <h2> <blockquote> <ul> <ol> <code>`
 
 Inline tags: `<strong> <em> <u> <code>`
 
+### Install
+
+Currently this package is provided as a ES6 module only, just require from an ES6 module aware environment like Babel-compiled code.
+
+    $ npm install draft-js-basic-html-editor
+
 ### Demo
 
 http://dburrows.github.io/draft-js-basic-html-editor/example-dist/
