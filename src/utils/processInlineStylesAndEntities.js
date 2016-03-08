@@ -10,9 +10,11 @@ export default function processInlineStylesAndEntities(inlineTagMap, entityTagMa
   let html = block.text;
   let tagInsertMap = {};
 
-  let sortedRanges = sortBy(block.inlineStyleRanges, 'offset');
+  // important to process in order, so sort
+  let sortedInlineStyleRanges = sortBy(block.inlineStyleRanges, 'offset');
+
   // map all the tag insertions we're going to do
-  sortedRanges.forEach(function(range) {
+  sortedInlineStyleRanges.forEach(function(range) {
     let tag = inlineTagMap[range.style];
 
     if (!tagInsertMap[range.offset]) { tagInsertMap[range.offset] = []; }
@@ -25,8 +27,9 @@ export default function processInlineStylesAndEntities(inlineTagMap, entityTagMa
     }
   });
 
-  // SORT BEFORE PROCESSING
-  block.entityRanges.forEach(function(range) {
+  let sortedEntityRanges = sortBy(block.entityRanges, 'offset');
+
+  sortedEntityRanges.forEach(function(range) {
     let entity = entityMap[range.key];
     let tag = entityTagMap[entity.type];
 
@@ -52,8 +55,6 @@ export default function processInlineStylesAndEntities(inlineTagMap, entityTagMa
     if (a < b) { return -1; }
     return 0;
   });
-
-  console.log(tagInsertMap, orderedKeys);
 
   // insert tags into string, keep track of offset caused by our text insertions
   let offset = 0;
