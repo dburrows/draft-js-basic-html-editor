@@ -21,6 +21,7 @@
   "license": "MIT",
   "dependencies": {
     "draft-js": "^0.1.0",
+    "lodash": "^4.6.1",
     "react": "^0.14.7",
     "react-dom": "^0.14.7"
   },
@@ -47,6 +48,16 @@
     "webpack-dev-server": "^1.14.1"
   },
   "browserify": {
-    "transform": [["babelify", { "presets": ["es2015","react"] }]]
+    "transform": [
+      [
+        "babelify",
+        {
+          "presets": [
+            "es2015",
+            "react"
+          ]
+        }
+      ]
+    ]
   }
 }

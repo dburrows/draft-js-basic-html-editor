@@ -1,1 +1,11 @@
+node_modules
+.DS_Store
+npm-debug.log
+lib-compiled
+coverage
+.cache
+*bundle.js
+*bundle.js.map
+log.txt
+.idea
 example-dist
