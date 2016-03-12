@@ -19,7 +19,6 @@ class BasicHtmlEditorExample extends React.Component {
   }
 
   updateHtml(html) {
-    console.log('HTML change: ', html);
     this.setState({
       html
     });
@@ -28,7 +27,11 @@ class BasicHtmlEditorExample extends React.Component {
   render() {
     return (
       <div>
-        <BasicHtmlEditor value={ this.state.html } onChange={ (html) => this.updateHtml(html) }/>
+        <BasicHtmlEditor
+          value={ this.state.html }
+          onChange={ (html) => this.updateHtml(html) }
+          debounce={ 500 }
+        />
         <div style={{ margin: '30px 10px 10px 10px' }}>
           <code>Exported HTML</code>
           <hr/>

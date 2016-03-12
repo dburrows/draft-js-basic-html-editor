@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import debounce from 'lodash/function/debounce';
 import {
   Editor,
   EditorState,
@@ -9,6 +10,7 @@ import {
   convertToRaw,
   CompositeDecorator
 } from 'draft-js';
+
 import htmlToContent from './utils/htmlToContent';
 import draftRawToHtml from './utils/draftRawToHtml';
 
@@ -69,11 +71,18 @@ export default class BasicHtmlEditor extends React.Component {
 
       // only emit html when content changes
       if( previousContent !== editorState.getCurrentContent() ) {
-        let raw = convertToRaw( editorState.getCurrentContent() );
-        let html = draftRawToHtml(raw);
-        this.props.onChange(html);
+        this.emitHTML(editorState);
       }
     };
+
+    function emitHTML(editorState) {
+      let a = Date.now();
+      let raw = convertToRaw( editorState.getCurrentContent() );
+      let html = draftRawToHtml(raw);
+      console.log(Date.now()-a);
+      this.props.onChange(html);
+    }
+    this.emitHTML = debounce(emitHTML, this.props.debounce);
 
     this.handleKeyCommand = (command) => this._handleKeyCommand(command);
     this.toggleBlockType = (type) => this._toggleBlockType(type);
