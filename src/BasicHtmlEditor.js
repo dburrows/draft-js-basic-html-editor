@@ -76,10 +76,8 @@ export default class BasicHtmlEditor extends React.Component {
     };
 
     function emitHTML(editorState) {
-      let a = Date.now();
       let raw = convertToRaw( editorState.getCurrentContent() );
       let html = draftRawToHtml(raw);
-      console.log(Date.now()-a);
       this.props.onChange(html);
     }
     this.emitHTML = debounce(emitHTML, this.props.debounce);
