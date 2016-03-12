@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import debounce from 'lodash/function/debounce';
+import debounce from 'lodash/debounce';
 import {
   Editor,
   EditorState,
