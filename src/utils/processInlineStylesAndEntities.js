@@ -1,5 +1,5 @@
-import template from 'lodash/string/template';
-import sortBy from 'lodash/collection/sortBy';
+import template from 'lodash/template';
+import sortBy from 'lodash/sortBy';
 
 export default function processInlineStylesAndEntities(inlineTagMap, entityTagMap, entityMap, block) {
   if (!block.inlineStyleRanges && !block.entityRanges) {
