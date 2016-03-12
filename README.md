@@ -24,6 +24,11 @@ If you're using Webpack, you're probably excluding `node_modules` from your Babe
       loaders: ["babel-loader"]
     }
 
+### Props
+
+* value - String of inital HTML to edit, see above for currently supported tags
+* onChange - function to call onChange, will receive emitted HTML as string
+* debounce - debounce delay for emitting html in ms, defaults to 0, improves performance massively when editing large documents
 
 ### Demo
 
