@@ -15,12 +15,14 @@ export default function processInlineStylesAndEntities(inlineTagMap, entityTagMa
 
   escapeReplacements.forEach((arr) =>{
     for(var i=0; i<html.length;i++) {
-        if (html[i] === arr[0]) {
-          if (!tagInsertMap[i]) { tagInsertMap[i] = []; }
-          tagInsertMap[i].push([ arr[0].length, arr[1] ])
-        };
+      if (html[i] === arr[0]) {
+        if (!tagInsertMap[i]) {
+          tagInsertMap[i] = [];
+        }
+        tagInsertMap[i].push([ arr[0].length, arr[1] ]);
+      }
     }
-  })
+  });
 
   // important to process in order, so sort
   let sortedInlineStyleRanges = sortBy(block.inlineStyleRanges, 'offset');
@@ -85,7 +87,7 @@ export default function processInlineStylesAndEntities(inlineTagMap, entityTagMa
         html = html.substr(0, offset+index) +
           replacement +
           html.substr(offset+index+length);
-        offset += (replacement.length - length )
+        offset += (replacement.length - length );
       }
 
     });
