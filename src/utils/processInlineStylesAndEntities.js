@@ -10,6 +10,18 @@ export default function processInlineStylesAndEntities(inlineTagMap, entityTagMa
   let html = block.text;
   let tagInsertMap = {};
 
+  // escape chars
+  let escapeReplacements = [ ['<', '&lt;'], ['&', '&amp;']];
+
+  escapeReplacements.forEach((arr) =>{
+    for(var i=0; i<html.length;i++) {
+        if (html[i] === arr[0]) {
+          if (!tagInsertMap[i]) { tagInsertMap[i] = []; }
+          tagInsertMap[i].push([ arr[0].length, arr[1] ])
+        };
+    }
+  })
+
   // important to process in order, so sort
   let sortedInlineStyleRanges = sortBy(block.inlineStyleRanges, 'offset');
 
@@ -60,11 +72,22 @@ export default function processInlineStylesAndEntities(inlineTagMap, entityTagMa
   let offset = 0;
   orderedKeys.forEach(function(pos) {
     let index = Number(pos);
+
     tagInsertMap[pos].forEach(function(tag) {
-      html = html.substr(0, offset+index) +
-        tag +
-        html.substr(offset+index);
-      offset += tag.length;
+
+      if (typeof tag === 'string') {
+        html = html.substr(0, offset+index) +
+          tag +
+          html.substr(offset+index);
+        offset += tag.length;
+      } else {
+        let [ length, replacement] = tag;
+        html = html.substr(0, offset+index) +
+          replacement +
+          html.substr(offset+index+length);
+        offset += (replacement.length - length )
+      }
+
     });
   });
 

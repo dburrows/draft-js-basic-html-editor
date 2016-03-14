@@ -1,14 +1,14 @@
 import processInlineStylesAndEntities from './processInlineStylesAndEntities';
 
 let blockTagMap = {
-  'header-one': `<h1>%content%</h1>\n`,
-  'header-two': `<h1>%content%</h1>\n`,
-  'unstyled': `<p>%content%</p>\n`,
-  'code-block': `<code>%content%</code>\n`,
-  'blockquote': `<blockquote>%content%</blockquote>\n`,
-  'ordered-list-item': `<li>%content%</li>\n`,
-  'unordered-list-item': `<li>%content%</li>\n`,
-  'default': `<p>%content%</p>\n`
+  'header-one':               ['<h1>','</h1>\n'],
+  'header-two':               ['<h1>','</h1>\n'],
+  'unstyled':                 ['<p>','</p>\n'],
+  'code-block':               ['<code>','</code>\n'],
+  'blockquote':               ['<blockquote>','</blockquote>\n'],
+  'ordered-list-item':        ['<li>','</li>\n'],
+  'unordered-list-item':      ['<li>','</li>\n'],
+  'default':                  ['<p>','</p>\n']
 };
 
 let inlineTagMap = {
@@ -47,15 +47,15 @@ export default function(raw) {
       nestLevel.unshift(block.type);
     }
 
-    html += blockTagMap[block.type] ?
-      blockTagMap[block.type].replace(
-        '%content%',
-        processInlineStylesAndEntities(inlineTagMap, entityTagMap, raw.entityMap, block)
-      ) :
-      blockTagMap['default'].replace(
-        '%content%',
-        processInlineStylesAndEntities(inlineTagMap, block)
-      );
+    let blockTag = blockTagMap[block.type]
+
+    html += blockTag ?
+      blockTag[0] +
+        processInlineStylesAndEntities(inlineTagMap, entityTagMap, raw.entityMap, block) +
+        blockTag[1] :
+      blockTagMap['default'][0] +
+        processInlineStylesAndEntities(inlineTagMap, block) +
+        blockTagMap['default'][1];
   });
   return html;
 
