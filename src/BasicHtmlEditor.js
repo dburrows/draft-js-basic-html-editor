@@ -128,7 +128,7 @@ export default class BasicHtmlEditor extends React.Component {
   }
 
   _addLineBreak(/* e */) {
-    let newContent, newEditorState, newSelection;
+    let newContent, newEditorState;
     const {editorState} = this.state;
     const content = editorState.getCurrentContent();
     const selection = editorState.getSelection();
