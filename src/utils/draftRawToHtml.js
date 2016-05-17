@@ -4,7 +4,7 @@ let blockTagMap = {
   'header-one':               ['<h1>','</h1>\n'],
   'header-two':               ['<h1>','</h1>\n'],
   'unstyled':                 ['<p>','</p>\n'],
-  'code-block':               ['<code>','</code>\n'],
+  'code-block':               ['<pre><code>','</code></pre>\n'],
   'blockquote':               ['<blockquote>','</blockquote>\n'],
   'ordered-list-item':        ['<li>','</li>\n'],
   'unordered-list-item':      ['<li>','</li>\n'],

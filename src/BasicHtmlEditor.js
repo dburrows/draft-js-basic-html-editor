@@ -8,7 +8,8 @@ import {
   Entity,
   RichUtils,
   convertToRaw,
-  CompositeDecorator
+  CompositeDecorator,
+  Modifier
 } from 'draft-js';
 
 import htmlToContent from './utils/htmlToContent';
@@ -85,6 +86,7 @@ export default class BasicHtmlEditor extends React.Component {
     this.handleKeyCommand = (command) => this._handleKeyCommand(command);
     this.toggleBlockType = (type) => this._toggleBlockType(type);
     this.toggleInlineStyle = (style) => this._toggleInlineStyle(style);
+    this.handleReturn = (e) => this._handleReturn(e);
     this.addLink = this._addLink.bind(this);
     this.removeLink = this._removeLink.bind(this);
   }
@@ -97,6 +99,14 @@ export default class BasicHtmlEditor extends React.Component {
       return true;
     }
     return false;
+  }
+
+  _handleReturn(e) {
+    if (e.metaKey === true) {
+      return this._addLineBreak();
+    } else {
+      return false;
+    }
   }
 
   _toggleBlockType(blockType) {
@@ -115,6 +125,25 @@ export default class BasicHtmlEditor extends React.Component {
         inlineStyle
       )
     );
+  }
+
+  _addLineBreak(/* e */) {
+    let newContent, newEditorState;
+    const {editorState} = this.state;
+    const content = editorState.getCurrentContent();
+    const selection = editorState.getSelection();
+    const block = content.getBlockForKey(selection.getStartKey());
+
+    console.log(content.toJS(), selection.toJS(), block.toJS());
+
+    if (block.type === 'code-block') {
+      newContent = Modifier.insertText(content, selection, '\n');
+      newEditorState = EditorState.push(editorState, newContent, 'add-new-line');
+      this.onChange(newEditorState);
+      return true;
+    } else {
+      return false;
+    }
   }
 
   _addLink(/* e */) {
@@ -172,6 +201,7 @@ export default class BasicHtmlEditor extends React.Component {
             customStyleMap={styleMap}
             editorState={editorState}
             handleKeyCommand={this.handleKeyCommand}
+            handleReturn={this.handleReturn}
             onChange={this.onChange}
             placeholder="Tell a story..."
             ref="editor"
