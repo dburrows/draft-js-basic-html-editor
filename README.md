@@ -39,7 +39,7 @@ http://dburrows.github.io/draft-js-basic-html-editor/example-dist/
 * Block support ✔️ 
 * Inline tag support ✔️
 * Handle Lists with more than one element ✔️
-* Tests
+* Tests ✔️
 * Links ✔️
 * Images
 * Prod build
