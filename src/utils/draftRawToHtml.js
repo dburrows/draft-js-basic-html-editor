@@ -32,22 +32,23 @@ let nestedTagMap = {
 export default function(raw) {
   let html = '';
   let nestLevel = [];
+  let lastIndex = raw.blocks.length - 1;
 
-  raw.blocks.forEach(function(block) {
+  raw.blocks.forEach(function(block, index) {
 
-    // open tag if nested
+    // close tag if not consecutive same nested
     if (nestLevel.length > 0 && nestLevel[0] !== block.type) {
       let type = nestLevel.shift();
-      html += nestedTagMap[type][1];
+      html += nestedTagMap[type][1] + '\n';
     }
 
-    // close tag is note consecutive same nested
+    // open tag if nested
     if ( nestedTagMap[block.type] && nestLevel[0] !== block.type) {
-      html += nestedTagMap[block.type][0];
+      html += nestedTagMap[block.type][0] + '\n';
       nestLevel.unshift(block.type);
     }
 
-    let blockTag = blockTagMap[block.type]
+    let blockTag = blockTagMap[block.type];
 
     html += blockTag ?
       blockTag[0] +
@@ -56,6 +57,14 @@ export default function(raw) {
       blockTagMap['default'][0] +
         processInlineStylesAndEntities(inlineTagMap, block) +
         blockTagMap['default'][1];
+
+    // close any unclosed blocks if we've processed all the blocks
+    if ( index === lastIndex && nestLevel.length > 0 ) {
+      while(nestLevel.length > 0 ) {
+        html += nestedTagMap[ nestLevel.shift() ][1];
+      }
+    }
+
   });
   return html;
 
