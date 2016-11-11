@@ -12,21 +12,26 @@
     "type": "git",
     "url": "https://github.com/dburrows/draft-js-basic-html-editor.git"
   },
-  "main": "src/BasicHtmlEditor.js",
+  "main": "dist/index.js",
   "scripts": {
     "dist-example": "webpack --config webpack.example-dist.config.js",
+    "dist": "webpack --config webpack.dist.config.js -p",
     "test-watch": "mocha --recursive --compilers js:babel-register -r babel-polyfill -w tests/",
-    "release": "release-it"
+    "release": "npm run dist && release-it"
   },
   "author": "David Burrows <david@designsuperbuild.com>",
   "license": "MIT",
   "dependencies": {
-    "draft-js": "^0.5.0",
-    "lodash": "^4.6.1",
-    "react": "^0.14.7",
-    "react-dom": "^0.14.7"
+    "draft-js": "^0.9.1",
+    "lodash": "^4.6.1"
+  },
+  "peerDependencies": {
+    "react": "^15",
+    "react-dom": "^15"
   },
   "devDependencies": {
+    "react": "^15",
+    "react-dom": "^15",
     "babel-core": "^6.8.0",
     "babel-eslint": "^6.0.4",
     "babel-loader": "^6.2.4",
