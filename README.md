@@ -13,17 +13,25 @@ Inline tags: `<strong> <em> <u> <code> <del>`
 
 ### Install & Usage
 
-Currently this package is provided as a ES6 module only, just require from an ES6 module aware environment like Babel-compiled code.
+`$ npm install draft-js-basic-html-editor`
 
-    $ npm install draft-js-basic-html-editor
+```js
 
-If you're using Webpack, you're probably excluding `node_modules` from your Babel loader, just add an exception
+import BasicHtmlEditor from 'draft-js-basic-html-editor';
 
-    {
-      test: /node_modules\/draft-js-basic-html-editor\//,
-      loaders: ["babel-loader"]
-    }
+const MyEditor = () => {
+  const initialHtml = 'hello, <b>World</b>';
+  const onChange = html => console.log('updated', html);
 
+  return (
+    <BasicHtmlEditor
+      value={ initialHtml }
+      onChange={ onChange }
+      debounce={ 500 }
+    />
+  )
+}
+```
 
 ### Demo
 
@@ -36,10 +44,10 @@ http://dburrows.github.io/draft-js-basic-html-editor/example-dist/
 
 #### To Do
 
-* Block support ✔️ 
+* Block support ✔️
 * Inline tag support ✔️
 * Handle Lists with more than one element ✔️
 * Tests ✔️
 * Links ✔️
 * Images
-* Prod build
+* Prod build ✔️
