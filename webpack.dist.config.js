@@ -10,7 +10,8 @@ module.exports = {
   },
   output: {
     path: './dist',
-    filename: "index.js"
+    filename: "index.js",
+    libraryTarget: 'commonjs'
   },
   externals: ['react', 'react-dom'],
   module: {
