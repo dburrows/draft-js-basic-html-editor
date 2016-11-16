@@ -19,7 +19,7 @@ Note: You'll also need to install `react` and `react-dom` if you don't already h
 
 #### Webpack
 
-The component is built without `react` or `react-dom` so you'll need to make sure that Webpack can resolve it's own copy. Either add a fallback:
+The component is built without `react` or `react-dom` so you'll need to make sure that Webpack can resolve copies of both those modules. Either add your projects `node_modules` as fallback path:
 
 ```
 resolve: {
