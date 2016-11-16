@@ -10,9 +10,13 @@ module.exports = {
   },
   output: {
     path: './dist',
-    filename: "index.js"
+    filename: "index.js",
+    libraryTarget: 'umd'
   },
-  externals: ['react', 'react-dom'],
+  externals: {
+    'react-dom': 'react-dom',
+    'react': 'react'
+  },
   module: {
     loaders: [
       {

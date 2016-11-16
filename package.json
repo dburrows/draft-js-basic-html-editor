@@ -15,7 +15,7 @@
   "main": "dist/index.js",
   "scripts": {
     "dist-example": "webpack --config webpack.example-dist.config.js",
-    "dist": "webpack --config webpack.dist.config.js -p",
+    "dist": "webpack --display-modules --config webpack.dist.config.js -p",
     "test-watch": "mocha --recursive --compilers js:babel-register -r babel-polyfill -w tests/",
     "release": "npm run dist && release-it"
   },
@@ -30,8 +30,6 @@
     "react-dom": "^15"
   },
   "devDependencies": {
-    "react": "^15",
-    "react-dom": "^15",
     "babel-core": "^6.8.0",
     "babel-eslint": "^6.0.4",
     "babel-loader": "^6.2.4",
@@ -49,6 +47,8 @@
     "mocha": "^2.4.5",
     "mocha-loader": "^0.7.1",
     "node-sass": "^3.4.2",
+    "react": "^15",
+    "react-dom": "^15",
     "react-hot-loader": "^1.3.0",
     "release-it": "^2.3.1",
     "sass-loader": "^3.1.2",
