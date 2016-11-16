@@ -11,9 +11,34 @@ Block tags: `<p> <h1> <h2> <blockquote> <ul> <ol> <code>`
 
 Inline tags: `<strong> <em> <u> <code> <del>`
 
-### Install & Usage
+### Install
 
 `$ npm install draft-js-basic-html-editor`
+
+Note: You'll also need to install `react` and `react-dom` if you don't already have them
+
+#### Webpack
+
+The component is built without `react` or `react-dom` so you'll need to make sure that Webpack can resolve it's own copy. Either add a fallback:
+
+```
+resolve: {
+  fallback:  path.resolve('./node_modules')
+}
+
+```
+
+or create an alias for just those 2 modules
+
+```
+resolve: {
+  alias: {
+    'react': path.resolve('./node_modules/react'),
+    'react-dom': path.resolve('./node_modules/react-dom'),
+  }
+```
+
+### Usage 
 
 ```js
 
