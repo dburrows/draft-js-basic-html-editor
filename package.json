@@ -14,7 +14,7 @@
   },
   "main": "dist/index.js",
   "scripts": {
-    "dist-example": "webpack --config webpack.example-dist.config.js",
+    "dist-example": "webpack --config webpack.example-dist.config.js --optimize-minimize",
     "dist": "webpack --display-modules --config webpack.dist.config.js -p",
     "test-watch": "mocha --recursive --compilers js:babel-register -r babel-polyfill -w tests/",
     "release": "npm run dist && release-it"

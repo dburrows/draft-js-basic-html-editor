@@ -2,7 +2,7 @@ var webpack = require("webpack");
 var path = require('path');
 
 module.exports = {
-  devtool: 'eval',
+  devtool: 'source-map',
   resolve: {
     fallback: path.join(__dirname, "node_modules"),
     alias: {
@@ -19,6 +19,13 @@ module.exports = {
     path: './example-dist',
     filename: "bundle.js"
   },
+  plugins: [
+    new webpack.DefinePlugin({
+      'process.env': {
+        'NODE_ENV': JSON.stringify('production')
+      }
+    })
+  ],
   module: {
     loaders: [
       {
