@@ -1,11 +1,8 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
-import debounce from 'lodash/debounce';
 import {
   Editor,
   EditorState,
   ContentState,
-  Entity,
   RichUtils,
   convertToRaw,
   CompositeDecorator,
@@ -20,11 +17,29 @@ import EntityControls from './components/EntityControls';
 import InlineStyleControls from './components/InlineStyleControls';
 import BlockStyleControls from './components/BlockStyleControls';
 import findEntities from './utils/findEntities';
+import { INLINE_STYLES, BLOCK_TYPES, ENTITY_CONTROLS } from './config/constants';
+
+// Custom overrides for "code" style.
+const styleMap = {
+  CODE: {
+    backgroundColor: 'rgba(0, 0, 0, 0.05)',
+    fontFamily: '"Inconsolata", "Menlo", "Consolas", monospace',
+    fontSize: 16,
+    padding: 2
+  }
+};
+
+const getBlockStyle = block => {
+  switch (block.getType()) {
+    case 'blockquote': return 'RichEditor-blockquote';
+    default: return null;
+  }
+};
 
 export default class BasicHtmlEditor extends React.Component {
   constructor(props) {
     super(props);
-    let { value } = props;
+    const { value } = props;
 
     const decorator = new CompositeDecorator([
       {
@@ -33,28 +48,12 @@ export default class BasicHtmlEditor extends React.Component {
       }
     ]);
 
-    this.ENTITY_CONTROLS = [
-      {label: 'Add Link', action: this._addLink.bind(this) },
-      {label: 'Remove Link', action: this._removeLink.bind(this) }
-    ];
-
-    this.INLINE_STYLES = [
-      {label: 'Bold', style: 'BOLD'},
-      {label: 'Italic', style: 'ITALIC'},
-      {label: 'Underline', style: 'UNDERLINE'},
-      {label: 'Monospace', style: 'CODE'},
-      {label: 'Strikethrough', style: 'STRIKETHROUGH'}
-    ];
-
-    this.BLOCK_TYPES = [
-      {label: 'P', style: 'unstyled'},
-      {label: 'H1', style: 'header-one'},
-      {label: 'H2', style: 'header-two'},
-      {label: 'Blockquote', style: 'blockquote'},
-      {label: 'UL', style: 'unordered-list-item'},
-      {label: 'OL', style: 'ordered-list-item'},
-      {label: 'Code Block', style: 'code-block'}
-    ];
+    this.ENTITY_CONTROLS = ENTITY_CONTROLS.map(control => {
+      control.action = this[control.actionName];
+      return control;
+    });
+    this.INLINE_STYLES = INLINE_STYLES;
+    this.BLOCK_TYPES = BLOCK_TYPES;
 
     this.state = {
       editorState: value ?
@@ -134,7 +133,7 @@ export default class BasicHtmlEditor extends React.Component {
     const selection = editorState.getSelection();
     const block = content.getBlockForKey(selection.getStartKey());
 
-    console.log(content.toJS(), selection.toJS(), block.toJS());
+    // console.log(content.toJS(), selection.toJS(), block.toJS());
 
     if (block.type === 'code-block') {
       newContent = Modifier.insertText(content, selection, '\n');
@@ -146,7 +145,7 @@ export default class BasicHtmlEditor extends React.Component {
     }
   }
 
-  _addLink(/* e */) {
+  addLink = (/* e */) => {
     const {editorState} = this.state;
     const selection = editorState.getSelection();
     if (!selection.isCollapsed()) {
@@ -162,7 +161,7 @@ export default class BasicHtmlEditor extends React.Component {
     }
   }
 
-  _removeLink(/* e */) {
+  removeLink = (/* e */) => {
     const {editorState} = this.state;
     const selection = editorState.getSelection();
     if (selection.isCollapsed()) {
@@ -215,22 +214,5 @@ export default class BasicHtmlEditor extends React.Component {
         </div>
       </div>
     );
-  }
-}
-
-// Custom overrides for "code" style.
-const styleMap = {
-  CODE: {
-    backgroundColor: 'rgba(0, 0, 0, 0.05)',
-    fontFamily: '"Inconsolata", "Menlo", "Consolas", monospace',
-    fontSize: 16,
-    padding: 2
-  }
-};
-
-function getBlockStyle(block) {
-  switch (block.getType()) {
-    case 'blockquote': return 'RichEditor-blockquote';
-    default: return null;
   }
 }
