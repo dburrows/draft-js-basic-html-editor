@@ -28,7 +28,7 @@ export default class BasicHtmlEditor extends React.Component {
 
     const decorator = new CompositeDecorator([
       {
-        strategy: findEntities.bind(null, 'link'),
+        strategy: findEntities,
         component: Link
       }
     ]);
@@ -149,12 +149,17 @@ export default class BasicHtmlEditor extends React.Component {
   _addLink(/* e */) {
     const {editorState} = this.state;
     const selection = editorState.getSelection();
-    if (selection.isCollapsed()) {
-      return;
+    if (!selection.isCollapsed()) {
+      const url = window.prompt('Enter a URL');
+      const contentState = editorState.getCurrentContent();
+      const contentStateWithEntity = contentState.createEntity(
+        'LINK',
+        'MUTABLE',
+        {url}
+      );
+      const entityKey = contentStateWithEntity.getLastCreatedEntityKey();
+      this.onChange(RichUtils.toggleLink(editorState, selection, entityKey));
     }
-    const href = window.prompt('Enter a URL');
-    const entityKey = Entity.create('link', 'MUTABLE', {href});
-    this.onChange(RichUtils.toggleLink(editorState, selection, entityKey));
   }
 
   _removeLink(/* e */) {
