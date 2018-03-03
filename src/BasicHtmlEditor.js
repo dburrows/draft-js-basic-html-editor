@@ -64,30 +64,25 @@ export default class BasicHtmlEditor extends React.Component {
         EditorState.createEmpty(decorator)
     };
 
-    // this.focus = () => this.refs.editor.focus();
-    this.onChange = (editorState) => {
-      let previousContent = this.state.editorState.getCurrentContent();
-      this.setState({editorState});
-
-      // only emit html when content changes
-      if( previousContent !== editorState.getCurrentContent() ) {
-        this.emitHTML(editorState);
-      }
-    };
-
-    function emitHTML(editorState) {
-      let raw = convertToRaw( editorState.getCurrentContent() );
-      let html = draftRawToHtml(raw);
-      this.props.onChange(html);
-    }
-    this.emitHTML = debounce(emitHTML, this.props.debounce);
-
     this.handleKeyCommand = (command) => this._handleKeyCommand(command);
     this.toggleBlockType = (type) => this._toggleBlockType(type);
     this.toggleInlineStyle = (style) => this._toggleInlineStyle(style);
     this.handleReturn = (e) => this._handleReturn(e);
-    this.addLink = this._addLink.bind(this);
-    this.removeLink = this._removeLink.bind(this);
+  }
+
+  componentWillUpdate(nextProps, nextState) {
+    // only emit html when content changes
+    const previousContent = this.state.editorState.getCurrentContent();
+    if( previousContent !== nextState.editorState.getCurrentContent() ) {
+      clearTimeout(this.timer);
+      this.timer = setTimeout(this.emitHTML(nextState.editorState), nextProps.debounce);
+    }
+  }
+
+  emitHTML = (editorState) => () => {
+    const raw = convertToRaw( editorState.getCurrentContent() );
+    const html = draftRawToHtml(raw);
+    this.props.onChange(html);
   }
 
   _handleKeyCommand(command) {
@@ -125,6 +120,10 @@ export default class BasicHtmlEditor extends React.Component {
       )
     );
   }
+
+  onChange = (editorState) => {
+    this.setState({editorState});
+  };
 
   _addLineBreak(/* e */) {
     let newContent, newEditorState;
