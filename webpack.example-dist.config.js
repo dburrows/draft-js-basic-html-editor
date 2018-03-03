@@ -1,13 +1,15 @@
 var webpack = require("webpack");
 var path = require('path');
+const LodashModuleReplacementPlugin = require('lodash-webpack-plugin');
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 module.exports = {
   devtool: 'source-map',
   resolve: {
-    fallback: path.join(__dirname, "node_modules"),
+    modules: [path.join(__dirname, 'node_modules')],
     alias: {
-      "react": __dirname + '/node_modules/react',
-      "react-dom": __dirname + '/node_modules/react-dom'
+      'react': path.resolve(__dirname, 'node_modules/react'),
+      'react-dom': path.resolve(__dirname, 'node_modules/react-dom')
     }
   },
   entry: {
@@ -16,7 +18,7 @@ module.exports = {
     ]
   },
   output: {
-    path: './example-dist',
+    path: path.resolve(__dirname, 'example-dist'),
     filename: "bundle.js"
   },
   plugins: [
@@ -24,21 +26,44 @@ module.exports = {
       'process.env': {
         'NODE_ENV': JSON.stringify('production')
       }
-    })
+    }),
+    new LodashModuleReplacementPlugin({
+      'shorthands': true,
+      'collections': true
+    }),
+    new BundleAnalyzerPlugin()
+
   ],
   module: {
-    loaders: [
+    rules: [
       {
-        test: /\.css$/, loader: "style-loader!css-loader"
+        test: /\.css$/,
+        use: ["style-loader", "css-loader"]
       },
       {
         test: /\.scss$/,
-        loader: "style!css!postcss!sass"
+        use: [
+          "style-loader",
+          "css-loader",
+          "postcss-loader",
+          "sass-loader"]
       },
       {
         test: /\.js$/,
         exclude: [ /node_modules/],
-        loaders: ["babel-loader"]
+        use: {
+          loader: 'babel-loader',
+          options: {
+            plugins: [
+              'lodash'
+            ],
+            presets: [
+              'react',
+              ['env', {modules: false, useBuiltIns: true}],
+              'stage-0'
+            ]
+          }
+        }
       }
     ]
   }

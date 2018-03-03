@@ -1,5 +1,6 @@
-var webpack = require("webpack");
-var path = require('path');
+const webpack = require("webpack");
+const path = require('path');
+const LodashModuleReplacementPlugin = require('lodash-webpack-plugin');
 
 module.exports = {
   devtool: false,
@@ -9,27 +10,50 @@ module.exports = {
     ]
   },
   output: {
-    path: './dist',
+    path:       path.resolve(__dirname, 'dist'),
     filename: "index.js",
     libraryTarget: 'umd'
   },
+  plugins: [
+    new LodashModuleReplacementPlugin({
+      'shorthands': true,
+      'collections': true
+    })
+  ],
   externals: {
     'react-dom': 'react-dom',
     'react': 'react'
   },
   module: {
-    loaders: [
+    rules: [
       {
-        test: /\.css$/, loader: "style-loader!css-loader"
+        test: /\.css$/,
+        use: ["style-loader", "css-loader"]
       },
       {
         test: /\.scss$/,
-        loader: "style!css!postcss!sass"
+        use: [
+          "style-loader",
+          "css-loader",
+          "postcss-loader",
+          "sass-loader"]
       },
       {
         test: /\.js$/,
         exclude: [ /node_modules/],
-        loaders: ["babel-loader"]
+        use: {
+          loader: 'babel-loader',
+          options: {
+            plugins: [
+              'lodash'
+            ],
+            presets: [
+              'react',
+              ['env', {modules: false, useBuiltIns: true}],
+              'stage-0'
+            ]
+          }
+        }
       }
     ]
   }
