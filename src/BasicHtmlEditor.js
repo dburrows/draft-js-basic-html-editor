@@ -54,16 +54,10 @@ export default class BasicHtmlEditor extends React.Component {
     });
     this.INLINE_STYLES = INLINE_STYLES;
     this.BLOCK_TYPES = BLOCK_TYPES;
-    if(value) {
-      const contentState = htmlToContent(value);
-      this.state = {
-        editorState: EditorState.createWithContent(contentState, decorator)
-      };
-    } else {
-      this.state = {
-        editorState: EditorState.createEmpty(decorator)
-      };
-    }
+    const contentState = htmlToContent(value);
+    this.state = {
+      editorState: EditorState.createWithContent(contentState, decorator)
+    };
 
     this.handleKeyCommand = (command) => this._handleKeyCommand(command);
     this.toggleBlockType = (type) => this._toggleBlockType(type);
