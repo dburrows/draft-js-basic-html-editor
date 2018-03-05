@@ -47,23 +47,17 @@ export default class BasicHtmlEditor extends React.Component {
   constructor(props) {
     super(props);
     const { value } = props;
-
+    this.focus = () => this.refs.editor.focus();
     this.ENTITY_CONTROLS = ENTITY_CONTROLS.map(control => {
       control.action = this[control.actionName];
       return control;
     });
     this.INLINE_STYLES = INLINE_STYLES;
     this.BLOCK_TYPES = BLOCK_TYPES;
-    if(value) {
-      const contentState = htmlToContent(value);
-      this.state = {
-        editorState: EditorState.createWithContent(contentState, decorator)
-      };
-    } else {
-      this.state = {
-        editorState: EditorState.createEmpty(decorator)
-      };
-    }
+    const contentState = htmlToContent(value);
+    this.state = {
+      editorState: EditorState.createWithContent(contentState, decorator)
+    };
 
     this.handleKeyCommand = (command) => this._handleKeyCommand(command);
     this.toggleBlockType = (type) => this._toggleBlockType(type);
@@ -199,7 +193,7 @@ export default class BasicHtmlEditor extends React.Component {
           editorState={editorState}
           entityControls={this.ENTITY_CONTROLS}
         />
-        <div className={className} /* onClick={this.focus} */>
+        <div className={className} onClick={this.focus} >
           <Editor
             blockStyleFn={getBlockStyle}
             customStyleMap={styleMap}
