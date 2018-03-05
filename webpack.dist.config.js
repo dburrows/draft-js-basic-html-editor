@@ -3,26 +3,38 @@ const path = require('path');
 const LodashModuleReplacementPlugin = require('lodash-webpack-plugin');
 
 module.exports = {
-  devtool: false,
+  devtool: 'none',
   entry: {
     example: [
       "./src/BasicHtmlEditor.js"
     ]
   },
   output: {
-    path:       path.resolve(__dirname, 'dist'),
+    path: path.resolve(__dirname, 'dist'),
     filename: "index.js",
-    libraryTarget: 'umd'
+    libraryTarget: "umd", // universal module definition
+    umdNamedDefine: true, // boolean
+    // use a named AMD module in UMD library
   },
   plugins: [
     new LodashModuleReplacementPlugin({
       'shorthands': true,
-      'collections': true
+      // 'collections': true
     })
   ],
   externals: {
-    'react-dom': 'react-dom',
-    'react': 'react'
+    react: {
+      root: 'React',
+      commonjs2: 'react',
+      commonjs: 'react',
+      amd: 'react',
+    },
+    'react-dom': {
+      root: 'ReactDOM',
+      commonjs2: 'react-dom',
+      commonjs: 'react-dom',
+      amd: 'react-dom',
+    }
   },
   module: {
     rules: [
@@ -49,7 +61,7 @@ module.exports = {
             ],
             presets: [
               'react',
-              ['env', {modules: false, useBuiltIns: true}],
+              ['env', {modules: false}],
               'stage-0'
             ]
           }

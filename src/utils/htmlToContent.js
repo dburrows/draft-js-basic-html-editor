@@ -1,7 +1,13 @@
-import DraftPasteProcessor from 'draft-js/lib/DraftPasteProcessor';
+import { convertFromHTML, ContentState } from 'draft-js';
 
-const { processHTML } = DraftPasteProcessor;
+const htmlToContent = (html) => {
+  const blocksFromHTML = convertFromHTML(html);
+  const contentState = ContentState.createFromBlockArray(
+    blocksFromHTML.contentBlocks,
+    blocksFromHTML.entityMap,
+  );
+  // console.log('contentState ', contentState.toJS());
+  return contentState;
+};
 
-export default function(html) {
-  return processHTML(html);
-}
+export default htmlToContent;

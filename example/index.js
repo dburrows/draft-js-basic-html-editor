@@ -6,9 +6,9 @@ import BasicHtmlEditor from '../src/BasicHtmlEditor';
 
 let html = `
   <h1>This is a Title</h1>
-  <p>Here's some text, it's useful</p>
+  <p id="Here">Here's some text, it's useful</p>
   <p>More text, some inline <strong>styling</strong> for <em>some</em> elements</p>
-  <a href='#' rel='noreferrer noopener' target='_self'>Some new link</a>
+  <a href='https://www.google.ru' rel='noreferrer noopener' target='_self'>Some new link</a>
   <p>Here's <em>some text, <strong>it's useful</strong></em></p>
 `;
 

@@ -4,13 +4,6 @@ const LodashModuleReplacementPlugin = require('lodash-webpack-plugin');
 
 module.exports = {
   devtool: 'eval',
-  resolve: {
-    modules: [path.join(__dirname, 'node_modules')],
-    alias: {
-      'react': path.resolve(__dirname, 'node_modules/react'),
-      'react-dom': path.resolve(__dirname, 'node_modules/react-dom')
-    }
-  },
   entry: {
     example: [
       'webpack-dev-server/client?http://localhost:3002',
@@ -24,11 +17,8 @@ module.exports = {
     publicPath: 'http://localhost:3002/lib/'
   },
   plugins: [
-    new webpack.DefinePlugin({
-      'process.env.NODE_ENV': JSON.stringify('development')
-    }),
     new LodashModuleReplacementPlugin({
-      'shorthands': true
+      'shorthands': true,
       // 'collections': true
     }),
     new webpack.HotModuleReplacementPlugin(),
@@ -52,17 +42,6 @@ module.exports = {
       {
         test: /\.js$/,
         exclude: /node_modules/,
-        loader: 'babel-loader',
-        options: {
-          // This is a feature of `babel-loader` for Webpack (not Babel itself).
-          // It enables caching results in ./node_modules/.cache/babel-loader/
-          // directory for faster rebuilds.
-          cacheDirectory: true,
-          plugins: ['react-hot-loader/babel']
-        }
-      },
-      {
-        test: /node_modules\/lodash-es\//,
         loader: 'babel-loader',
         options: {
           // This is a feature of `babel-loader` for Webpack (not Babel itself).

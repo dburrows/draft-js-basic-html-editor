@@ -70,7 +70,7 @@ export default function processInlineStylesAndEntities(inlineTagMap, entityTagMa
       const tagsToReopen = [];
 
       iterateArray.forEach( tag => {
-        const isCloser = tag.substr(0,2) === '</';
+        const isCloser = tag.startsWith('</');
         const stackTag = tagStack[0];
         const closeMatch = isTagCloseMatch(stackTag, tag);
 

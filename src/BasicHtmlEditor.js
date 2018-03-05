@@ -2,12 +2,11 @@ import React from 'react';
 import {
   Editor,
   EditorState,
-  ContentState,
   RichUtils,
   convertToRaw,
   CompositeDecorator,
   Modifier
-} from 'draft-js';
+} from 'draft-js/lib/Draft';
 
 import htmlToContent from './utils/htmlToContent';
 import draftRawToHtml from './utils/draftRawToHtml';
@@ -36,17 +35,18 @@ const getBlockStyle = block => {
   }
 };
 
+
+const decorator = new CompositeDecorator([
+  {
+    strategy: findEntities,
+    component: Link
+  }
+]);
+
 export default class BasicHtmlEditor extends React.Component {
   constructor(props) {
     super(props);
     const { value } = props;
-
-    const decorator = new CompositeDecorator([
-      {
-        strategy: findEntities,
-        component: Link
-      }
-    ]);
 
     this.ENTITY_CONTROLS = ENTITY_CONTROLS.map(control => {
       control.action = this[control.actionName];
@@ -54,15 +54,16 @@ export default class BasicHtmlEditor extends React.Component {
     });
     this.INLINE_STYLES = INLINE_STYLES;
     this.BLOCK_TYPES = BLOCK_TYPES;
-
-    this.state = {
-      editorState: value ?
-        EditorState.createWithContent(
-          ContentState.createFromBlockArray(htmlToContent(value)),
-          decorator
-        ) :
-        EditorState.createEmpty(decorator)
-    };
+    if(value) {
+      const contentState = htmlToContent(value);
+      this.state = {
+        editorState: EditorState.createWithContent(contentState, decorator)
+      };
+    } else {
+      this.state = {
+        editorState: EditorState.createEmpty(decorator)
+      };
+    }
 
     this.handleKeyCommand = (command) => this._handleKeyCommand(command);
     this.toggleBlockType = (type) => this._toggleBlockType(type);

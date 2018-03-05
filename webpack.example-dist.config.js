@@ -1,17 +1,9 @@
 var webpack = require("webpack");
 var path = require('path');
 const LodashModuleReplacementPlugin = require('lodash-webpack-plugin');
-const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 module.exports = {
   devtool: 'source-map',
-  resolve: {
-    modules: [path.join(__dirname, 'node_modules')],
-    alias: {
-      'react': path.resolve(__dirname, 'node_modules/react'),
-      'react-dom': path.resolve(__dirname, 'node_modules/react-dom')
-    }
-  },
   entry: {
     example: [
       "./example/index.js"
@@ -22,17 +14,10 @@ module.exports = {
     filename: "bundle.js"
   },
   plugins: [
-    new webpack.DefinePlugin({
-      'process.env': {
-        'NODE_ENV': JSON.stringify('production')
-      }
-    }),
     new LodashModuleReplacementPlugin({
       'shorthands': true,
-      'collections': true
-    }),
-    new BundleAnalyzerPlugin()
-
+      // 'collections': true
+    })
   ],
   module: {
     rules: [
@@ -59,7 +44,7 @@ module.exports = {
             ],
             presets: [
               'react',
-              ['env', {modules: false, useBuiltIns: true}],
+              ['env', {modules: false}],
               'stage-0'
             ]
           }

@@ -5,7 +5,7 @@ export default function findEntities(contentBlock, callback, contentState) {
       const entityKey = character.getEntity();
       return (
         entityKey !== null &&
-        contentState.getEntity(entityKey).getType() === 'LINK'
+        contentState.getEntity(entityKey).getType().toUpperCase() === 'LINK'
       );
     },
     callback
