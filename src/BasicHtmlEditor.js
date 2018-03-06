@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from 'react';
 import {
   Editor,
   EditorState,
@@ -43,7 +43,7 @@ const decorator = new CompositeDecorator([
   }
 ]);
 
-export default class BasicHtmlEditor extends React.Component {
+export default class BasicHtmlEditor extends Component {
   constructor(props) {
     super(props);
     const { value } = props;

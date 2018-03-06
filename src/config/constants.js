@@ -30,7 +30,6 @@ export const BLOCK_TYPES = [
   {label: 'Code Block', style: 'code-block'}
 ];
 
-
 export const BLOCK_TAG_MAP = {
   'header-one':               ['<h1>','</h1>\n'],
   'header-two':               ['<h1>','</h1>\n'],
@@ -41,8 +40,6 @@ export const BLOCK_TAG_MAP = {
   'unordered-list-item':      ['<li>','</li>\n'],
   'default':                  ['<p>','</p>\n']
 };
-
-
 
 export const ENTITY_TAG_MAP = {
   'LINK': ['<a href="<%= url %>" rel="noopener noreferrer" className="drafjs-bhe_link">', '</a>']

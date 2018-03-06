@@ -1,13 +1,14 @@
 import React from 'react';
-import {  RichUtils } from 'draft-js';
+import { RichUtils } from 'draft-js/lib/Draft';
 import StyleButton from './StyleButton';
 import { ENTITY_CONTROLS } from '../config/constants';
 
+const { currentBlockContainsLink } = RichUtils;
 const addLinkLabel = ENTITY_CONTROLS[0].label;
 
 export default function EntityControls(props) {
   const { entityControls, editorState } = props;
-  const isLink = RichUtils.currentBlockContainsLink(editorState);
+  const isLink = currentBlockContainsLink(editorState);
   return (
     <div className="RichEditor-controls">
       {entityControls.map(type =>

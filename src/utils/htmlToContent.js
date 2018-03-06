@@ -1,4 +1,4 @@
-import { convertFromHTML, ContentState } from 'draft-js';
+import { convertFromHTML, ContentState } from 'draft-js/lib/Draft';
 
 const htmlToContent = (html) => {
   if(!html) {

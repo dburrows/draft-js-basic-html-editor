@@ -1,7 +1,7 @@
 import React from 'react';
 import StyleButton from './StyleButton';
 
-export default function InlineStyleControls(props) {
+const InlineStyleControls = (props) => {
   let { inlineStyles } = props;
   var currentStyle = props.editorState.getCurrentInlineStyle();
 
@@ -18,4 +18,6 @@ export default function InlineStyleControls(props) {
       )}
     </div>
   );
-}
+};
+
+export default InlineStyleControls;

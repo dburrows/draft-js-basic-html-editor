@@ -1,8 +1,7 @@
 import React from 'react';
-
 import StyleButton from './StyleButton';
 
-export default function BlockStyleControls(props) {
+const BlockStyleControls = (props) => {
   const {editorState, blockTypes} = props;
   const selection = editorState.getSelection();
   const blockType = editorState
@@ -23,4 +22,6 @@ export default function BlockStyleControls(props) {
       )}
     </div>
   );
-}
+};
+
+export default BlockStyleControls;

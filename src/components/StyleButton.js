@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { PureComponent } from 'react';
 
-export default class StyleButton extends React.Component {
+export default class StyleButton extends PureComponent {
   constructor() {
     super();
     this.onToggle = (e) => {
