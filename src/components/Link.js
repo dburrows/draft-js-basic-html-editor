@@ -1,11 +1,12 @@
 import React from 'react';
-import { Entity } from 'draft-js';
 
-export default function Link(props) {
-  const {href} = Entity.get(props.entityKey).getData();
+const Link = (props) => {
+  const {url} = props.contentState.getEntity(props.entityKey).getData();
   return (
-    <a href={href} className="drafjs-bhe_link">
+    <a href={url}>
       {props.children}
     </a>
   );
-}
+};
+
+export default Link;

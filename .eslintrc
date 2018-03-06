@@ -22,7 +22,7 @@
     "extends": "eslint:recommended",
     "ecmaFeatures": {
         "jsx": true,
-        "modules": true,
+        "modules": false,
     },
     "plugins": [
         "react"

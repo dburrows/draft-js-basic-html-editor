@@ -1,7 +1,7 @@
 import Chai from 'chai';
 const expect = Chai.expect;
 import processInlineStylesAndEntities from '../../../src/utils/processInlineStylesAndEntities';
-import { inlineTagMap } from '../../../src/config/tagMaps';
+import { INLINE_TAG_MAP } from '../../../src/config/constants';
 
 let overlappingInlineStyles = {
   "key": "67tdi",
@@ -105,19 +105,19 @@ let badlyNestedTags2 = {
 describe('processInlineStylesAndEntities', function () {
 
   it('should order blocks correctly: test case 1', function() {
-    let html = processInlineStylesAndEntities(inlineTagMap, {}, {}, overlappingInlineStyles);
+    let html = processInlineStylesAndEntities(INLINE_TAG_MAP, {}, {}, overlappingInlineStyles);
 
     expect(html).to.equal('Here\'s some <strong>text, it\'s <em>useful</em></strong>');
   });
 
   it('should order blocks correctly: test case 2', function() {
-    let html = processInlineStylesAndEntities(inlineTagMap, {}, {}, overlappingInlineStyles2);
+    let html = processInlineStylesAndEntities(INLINE_TAG_MAP, {}, {}, overlappingInlineStyles2);
 
     expect(html).to.equal(`Here's <em>some text, <strong>it's useful</strong></em>`);
   });
 
   it('should close/open nested inline tags properly: test case 1', function () {
-    let html = processInlineStylesAndEntities(inlineTagMap, {}, {}, badlyNestedTags1);
+    let html = processInlineStylesAndEntities(INLINE_TAG_MAP, {}, {}, badlyNestedTags1);
 
     expect(html).to.equal(
       `<strong>aa<em>aaaaaa</em></strong><em>aa</em>`);
@@ -125,7 +125,7 @@ describe('processInlineStylesAndEntities', function () {
   });
 
   it('should close/open tags properly: test case 2', function () {
-    let html = processInlineStylesAndEntities(inlineTagMap, {}, {}, badlyNestedTags2);
+    let html = processInlineStylesAndEntities(INLINE_TAG_MAP, {}, {}, badlyNestedTags2);
 
     expect(html).to.equal(
       `He<strong><em>re</em>'s <em>some text, it's</em></strong><em> useful but it'</em>s quote long <strong>this</strong> time`);

@@ -1,37 +1,54 @@
 var webpack = require("webpack");
 var path = require('path');
+const LodashModuleReplacementPlugin = require('lodash-webpack-plugin');
 
 module.exports = {
-  devtool: 'eval',
-  resolve: {
-    fallback: path.join(__dirname, "node_modules"),
-    alias: {
-      "react": __dirname + '/node_modules/react',
-      "react-dom": __dirname + '/node_modules/react-dom'
-    }
-  },
+  devtool: 'source-map',
   entry: {
     example: [
       "./example/index.js"
     ]
   },
   output: {
-    path: './example-dist',
+    path: path.resolve(__dirname, 'example-dist'),
     filename: "bundle.js"
   },
+  plugins: [
+    new LodashModuleReplacementPlugin({
+      'shorthands': true,
+      // 'collections': true
+    })
+  ],
   module: {
-    loaders: [
+    rules: [
       {
-        test: /\.css$/, loader: "style-loader!css-loader"
+        test: /\.css$/,
+        use: ["style-loader", "css-loader"]
       },
       {
         test: /\.scss$/,
-        loader: "style!css!postcss!sass"
+        use: [
+          "style-loader",
+          "css-loader",
+          "postcss-loader",
+          "sass-loader"]
       },
       {
         test: /\.js$/,
         exclude: [ /node_modules/],
-        loaders: ["babel-loader"]
+        use: {
+          loader: 'babel-loader',
+          options: {
+            plugins: [
+              'lodash'
+            ],
+            presets: [
+              'react',
+              ['env', {modules: false}],
+              'stage-0'
+            ]
+          }
+        }
       }
     ]
   }

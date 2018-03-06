@@ -1,16 +1,12 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import debounce from 'lodash/debounce';
+import React, { Component } from 'react';
 import {
   Editor,
   EditorState,
-  ContentState,
-  Entity,
   RichUtils,
   convertToRaw,
   CompositeDecorator,
   Modifier
-} from 'draft-js';
+} from 'draft-js/lib/Draft';
 
 import htmlToContent from './utils/htmlToContent';
 import draftRawToHtml from './utils/draftRawToHtml';
@@ -20,75 +16,68 @@ import EntityControls from './components/EntityControls';
 import InlineStyleControls from './components/InlineStyleControls';
 import BlockStyleControls from './components/BlockStyleControls';
 import findEntities from './utils/findEntities';
+import { INLINE_STYLES, BLOCK_TYPES, ENTITY_CONTROLS } from './config/constants';
 
-export default class BasicHtmlEditor extends React.Component {
+// Custom overrides for "code" style.
+const styleMap = {
+  CODE: {
+    backgroundColor: 'rgba(0, 0, 0, 0.05)',
+    fontFamily: '"Inconsolata", "Menlo", "Consolas", monospace',
+    fontSize: 16,
+    padding: 2
+  }
+};
+
+const getBlockStyle = block => {
+  switch (block.getType()) {
+    case 'blockquote': return 'RichEditor-blockquote';
+    default: return null;
+  }
+};
+
+
+const decorator = new CompositeDecorator([
+  {
+    strategy: findEntities,
+    component: Link
+  }
+]);
+
+export default class BasicHtmlEditor extends Component {
   constructor(props) {
     super(props);
-    let { value } = props;
-
-    const decorator = new CompositeDecorator([
-      {
-        strategy: findEntities.bind(null, 'link'),
-        component: Link
-      }
-    ]);
-
-    this.ENTITY_CONTROLS = [
-      {label: 'Add Link', action: this._addLink.bind(this) },
-      {label: 'Remove Link', action: this._removeLink.bind(this) }
-    ];
-
-    this.INLINE_STYLES = [
-      {label: 'Bold', style: 'BOLD'},
-      {label: 'Italic', style: 'ITALIC'},
-      {label: 'Underline', style: 'UNDERLINE'},
-      {label: 'Monospace', style: 'CODE'},
-      {label: 'Strikethrough', style: 'STRIKETHROUGH'}
-    ];
-
-    this.BLOCK_TYPES = [
-      {label: 'P', style: 'unstyled'},
-      {label: 'H1', style: 'header-one'},
-      {label: 'H2', style: 'header-two'},
-      {label: 'Blockquote', style: 'blockquote'},
-      {label: 'UL', style: 'unordered-list-item'},
-      {label: 'OL', style: 'ordered-list-item'},
-      {label: 'Code Block', style: 'code-block'}
-    ];
-
+    const { value } = props;
+    this.focus = () => this.refs.editor.focus();
+    this.ENTITY_CONTROLS = ENTITY_CONTROLS.map(control => {
+      control.action = this[control.actionName];
+      return control;
+    });
+    this.INLINE_STYLES = INLINE_STYLES;
+    this.BLOCK_TYPES = BLOCK_TYPES;
+    const contentState = htmlToContent(value);
     this.state = {
-      editorState: value ?
-        EditorState.createWithContent(
-          ContentState.createFromBlockArray(htmlToContent(value)),
-          decorator
-        ) :
-        EditorState.createEmpty(decorator)
+      editorState: EditorState.createWithContent(contentState, decorator)
     };
-
-    // this.focus = () => this.refs.editor.focus();
-    this.onChange = (editorState) => {
-      let previousContent = this.state.editorState.getCurrentContent();
-      this.setState({editorState});
-
-      // only emit html when content changes
-      if( previousContent !== editorState.getCurrentContent() ) {
-        this.emitHTML(editorState);
-      }
-    };
-
-    function emitHTML(editorState) {
-      let raw = convertToRaw( editorState.getCurrentContent() );
-      let html = draftRawToHtml(raw);
-      this.props.onChange(html);
-    }
-    this.emitHTML = debounce(emitHTML, this.props.debounce);
 
     this.handleKeyCommand = (command) => this._handleKeyCommand(command);
     this.toggleBlockType = (type) => this._toggleBlockType(type);
     this.toggleInlineStyle = (style) => this._toggleInlineStyle(style);
     this.handleReturn = (e) => this._handleReturn(e);
-    this.addLink = this._addLink.bind(this);
-    this.removeLink = this._removeLink.bind(this);
+  }
+
+  componentWillUpdate(nextProps, nextState) {
+    // only emit html when content changes
+    const previousContent = this.state.editorState.getCurrentContent();
+    if( previousContent !== nextState.editorState.getCurrentContent() ) {
+      clearTimeout(this.timer);
+      this.timer = setTimeout(this.emitHTML(nextState.editorState), nextProps.debounce);
+    }
+  }
+
+  emitHTML = (editorState) => () => {
+    const raw = convertToRaw( editorState.getCurrentContent() );
+    const html = draftRawToHtml(raw);
+    this.props.onChange(html);
   }
 
   _handleKeyCommand(command) {
@@ -127,6 +116,10 @@ export default class BasicHtmlEditor extends React.Component {
     );
   }
 
+  onChange = (editorState) => {
+    this.setState({editorState});
+  };
+
   _addLineBreak(/* e */) {
     let newContent, newEditorState;
     const {editorState} = this.state;
@@ -134,7 +127,7 @@ export default class BasicHtmlEditor extends React.Component {
     const selection = editorState.getSelection();
     const block = content.getBlockForKey(selection.getStartKey());
 
-    console.log(content.toJS(), selection.toJS(), block.toJS());
+    // console.log(content.toJS(), selection.toJS(), block.toJS());
 
     if (block.type === 'code-block') {
       newContent = Modifier.insertText(content, selection, '\n');
@@ -146,18 +139,23 @@ export default class BasicHtmlEditor extends React.Component {
     }
   }
 
-  _addLink(/* e */) {
+  addLink = (/* e */) => {
     const {editorState} = this.state;
     const selection = editorState.getSelection();
-    if (selection.isCollapsed()) {
-      return;
+    if (!selection.isCollapsed()) {
+      const url = window.prompt('Enter a URL');
+      const contentState = editorState.getCurrentContent();
+      const contentStateWithEntity = contentState.createEntity(
+        'LINK',
+        'MUTABLE',
+        {url}
+      );
+      const entityKey = contentStateWithEntity.getLastCreatedEntityKey();
+      this.onChange(RichUtils.toggleLink(editorState, selection, entityKey));
     }
-    const href = window.prompt('Enter a URL');
-    const entityKey = Entity.create('link', 'MUTABLE', {href});
-    this.onChange(RichUtils.toggleLink(editorState, selection, entityKey));
   }
 
-  _removeLink(/* e */) {
+  removeLink = (/* e */) => {
     const {editorState} = this.state;
     const selection = editorState.getSelection();
     if (selection.isCollapsed()) {
@@ -195,7 +193,7 @@ export default class BasicHtmlEditor extends React.Component {
           editorState={editorState}
           entityControls={this.ENTITY_CONTROLS}
         />
-        <div className={className} /* onClick={this.focus} */>
+        <div className={className} onClick={this.focus} >
           <Editor
             blockStyleFn={getBlockStyle}
             customStyleMap={styleMap}
@@ -210,22 +208,5 @@ export default class BasicHtmlEditor extends React.Component {
         </div>
       </div>
     );
-  }
-}
-
-// Custom overrides for "code" style.
-const styleMap = {
-  CODE: {
-    backgroundColor: 'rgba(0, 0, 0, 0.05)',
-    fontFamily: '"Inconsolata", "Menlo", "Consolas", monospace',
-    fontSize: 16,
-    padding: 2
-  }
-};
-
-function getBlockStyle(block) {
-  switch (block.getType()) {
-    case 'blockquote': return 'RichEditor-blockquote';
-    default: return null;
   }
 }

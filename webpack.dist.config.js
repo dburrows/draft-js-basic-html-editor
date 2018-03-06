@@ -1,35 +1,71 @@
-var webpack = require("webpack");
-var path = require('path');
+const webpack = require("webpack");
+const path = require('path');
+const LodashModuleReplacementPlugin = require('lodash-webpack-plugin');
 
 module.exports = {
-  devtool: false,
+  devtool: 'none',
   entry: {
     example: [
       "./src/BasicHtmlEditor.js"
     ]
   },
   output: {
-    path: './dist',
+    path: path.resolve(__dirname, 'dist'),
     filename: "index.js",
-    libraryTarget: 'umd'
+    libraryTarget: "umd", // universal module definition
+    umdNamedDefine: true, // boolean
+    // use a named AMD module in UMD library
   },
+  plugins: [
+    new LodashModuleReplacementPlugin({
+      'shorthands': true,
+      // 'collections': true
+    })
+  ],
   externals: {
-    'react-dom': 'react-dom',
-    'react': 'react'
+    react: {
+      root: 'React',
+      commonjs2: 'react',
+      commonjs: 'react',
+      amd: 'react',
+    },
+    'react-dom': {
+      root: 'ReactDOM',
+      commonjs2: 'react-dom',
+      commonjs: 'react-dom',
+      amd: 'react-dom',
+    }
   },
   module: {
-    loaders: [
+    rules: [
       {
-        test: /\.css$/, loader: "style-loader!css-loader"
+        test: /\.css$/,
+        use: ["style-loader", "css-loader"]
       },
       {
         test: /\.scss$/,
-        loader: "style!css!postcss!sass"
+        use: [
+          "style-loader",
+          "css-loader",
+          "postcss-loader",
+          "sass-loader"]
       },
       {
         test: /\.js$/,
         exclude: [ /node_modules/],
-        loaders: ["babel-loader"]
+        use: {
+          loader: 'babel-loader',
+          options: {
+            plugins: [
+              'lodash'
+            ],
+            presets: [
+              'react',
+              ['env', {modules: false}],
+              'stage-0'
+            ]
+          }
+        }
       }
     ]
   }

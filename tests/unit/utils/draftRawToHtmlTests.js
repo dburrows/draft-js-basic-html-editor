@@ -53,7 +53,7 @@ describe('processInlineStylesAndEntities', function () {
       '<li>thing 1</li>\n' +
       '<li>thing 2</li>\n' +
       '</ul>'
-      );
+    );
   });
 
 });

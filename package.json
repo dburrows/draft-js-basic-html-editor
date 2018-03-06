@@ -1,6 +1,6 @@
 {
   "name": "draft-js-basic-html-editor",
-  "version": "1.0.10",
+  "version": "1.0.11",
   "description": "",
   "keywords": [
     "draftjs",
@@ -14,47 +14,52 @@
   },
   "main": "dist/index.js",
   "scripts": {
-    "dist-example": "webpack --config webpack.example-dist.config.js",
-    "dist": "webpack --display-modules --config webpack.dist.config.js -p",
+    "start": "webpack-dev-server --mode development --config webpack.config.js",
+    "dist-example": "webpack --mode production --config webpack.example-dist.config.js",
+    "dist": "webpack --mode production --display-modules --config webpack.dist.config.js",
     "test-watch": "mocha --recursive --compilers js:babel-register -r babel-polyfill -w tests/",
-    "release": "npm run dist && release-it"
+    "release": "yarn run dist && release-it"
   },
   "author": "David Burrows <david@designsuperbuild.com>",
   "license": "MIT",
   "dependencies": {
-    "draft-js": "^0.9.1",
-    "lodash": "^4.6.1"
+    "draft-js": "^0.10.5",
+    "lodash": "^4.17.5"
   },
   "peerDependencies": {
-    "react": "^15",
-    "react-dom": "^15"
+    "react": "15.x.x || 16.x.x",
+    "react-dom": "15.x.x || 16.x.x"
   },
   "devDependencies": {
-    "babel-core": "^6.8.0",
-    "babel-eslint": "^6.0.4",
-    "babel-loader": "^6.2.4",
+    "babel-core": "^6.26.0",
+    "babel-eslint": "^8.2.2",
+    "babel-loader": "^7.1.3",
+    "babel-plugin-lodash": "^3.3.2",
     "babel-polyfill": "^6.8.0",
-    "babel-preset-es2015": "^6.6.0",
+    "babel-preset-env": "^1.6.1",
     "babel-preset-react": "^6.5.0",
+    "babel-preset-stage-0": "6.24.1",
     "babel-register": "^6.8.0",
-    "chai": "^3.5.0",
-    "css-loader": "^0.23.1",
-    "enzyme": "^2.0.0",
-    "eslint": "^2.9.0",
-    "eslint-plugin-react": "^5.0.1",
+    "chai": "^4.1.2",
+    "css-loader": "^0.28.10",
+    "enzyme": "^3.3.0",
+    "eslint": "^4.18.2",
+    "eslint-plugin-react": "^7.7.0",
     "estraverse": "^4.2.0",
     "estraverse-fb": "^1.3.1",
-    "mocha": "^2.4.5",
-    "mocha-loader": "^0.7.1",
-    "node-sass": "^3.4.2",
-    "react": "^15",
-    "react-dom": "^15",
-    "react-hot-loader": "^1.3.0",
-    "release-it": "^2.3.1",
-    "sass-loader": "^3.1.2",
-    "style-loader": "^0.13.0",
-    "webpack": "^1.12.14",
-    "webpack-dev-server": "^1.14.1"
+    "lodash-webpack-plugin": "^0.11.4",
+    "mocha": "^5.0.1",
+    "mocha-loader": "^1.1.3",
+    "node-sass": "4",
+    "react": "^16.2.0",
+    "react-dom": "^16.2.0",
+    "react-hot-loader": "^4.0.0",
+    "release-it": "^7.2.0",
+    "sass-loader": "^6.0.6",
+    "style-loader": "^0.20.2",
+    "webpack": "^4.0.1",
+    "webpack-cli": "^2.0.9",
+    "webpack-dev-server": "^3.0.0-alpha6"
   },
   "browserify": {
     "transform": [
@@ -62,8 +67,9 @@
         "babelify",
         {
           "presets": [
-            "es2015",
-            "react"
+            "react",
+            "env",
+            "stage-0"
           ]
         }
       ]

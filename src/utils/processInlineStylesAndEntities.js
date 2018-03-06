@@ -1,8 +1,8 @@
 import template from 'lodash/template';
-import sortBy from 'lodash/sortBy';
-import last from 'lodash/last';
 import clone from 'lodash/clone';
-import indexOf from 'lodash/indexOf'
+import { compareObjectBy, compareNums } from './helpers';
+
+const compareObjectByOffset = compareObjectBy({key: 'offset'});
 
 export default function processInlineStylesAndEntities(inlineTagMap, entityTagMap, entityMap, block) {
   if (!block.inlineStyleRanges && !block.entityRanges) {
@@ -17,7 +17,7 @@ export default function processInlineStylesAndEntities(inlineTagMap, entityTagMa
    * ESCAPE CHARS
   */
 
-  let escapeReplacements = [ ['<', '&lt;'], ['&', '&amp;']];
+  const escapeReplacements = [ ['<', '&lt;'], ['&', '&amp;']];
 
   escapeReplacements.forEach((arr) =>{
     for(var i=0; i<html.length;i++) {
@@ -35,11 +35,10 @@ export default function processInlineStylesAndEntities(inlineTagMap, entityTagMa
   */
 
   // important to process in order, so sort
-  let sortedInlineStyleRanges = sortBy(block.inlineStyleRanges, 'offset');
-
+  const sortedInlineStyleRanges = block.inlineStyleRanges.sort(compareObjectByOffset);
   // map all the tag insertions we're going to do
   sortedInlineStyleRanges.forEach(function(range) {
-    let tag = inlineTagMap[range.style];
+    const tag = inlineTagMap[range.style];
 
     if (!tagInsertMap[range.offset]) { tagInsertMap[range.offset] = []; }
 
@@ -59,21 +58,21 @@ export default function processInlineStylesAndEntities(inlineTagMap, entityTagMa
   var tagStack = [];
 
   Object.keys(tagInsertMap).forEach( key => {
-    let newInsertMap = [];
-    let tags = tagInsertMap[key];
+    const newInsertMap = [];
+    const tags = tagInsertMap[key];
 
     if (tagStack.length === 0) {
       tags.forEach( tag => {
         tagStack.unshift(tag);
       });
     } else {
-      let iterateArray = clone(tags);
-      let tagsToReopen = [];
+      const iterateArray = clone(tags);
+      const tagsToReopen = [];
 
       iterateArray.forEach( tag => {
-        let isCloser = tag.substr(0,2) === '</';
-        let stackTag = tagStack[0];
-        let closeMatch = isTagCloseMatch(stackTag, tag);
+        const isCloser = tag.startsWith('</');
+        const stackTag = tagStack[0];
+        const closeMatch = isTagCloseMatch(stackTag, tag);
 
 
         if (!stackTag || closeMatch) {
@@ -121,14 +120,13 @@ export default function processInlineStylesAndEntities(inlineTagMap, entityTagMa
    * ENTITY RANGER
    */
 
-  let sortedEntityRanges = sortBy(block.entityRanges, 'offset');
+  const sortedEntityRanges = block.entityRanges.sort(compareObjectByOffset);
 
   sortedEntityRanges.forEach(function(range) {
-    let entity = entityMap[range.key];
-    let tag = entityTagMap[entity.type];
-
-    let compiledTag0 = template(tag[0])(entity.data);
-    let compiledTag1 = template(tag[1])(entity.data);
+    const entity = entityMap[range.key];
+    const tag = entityTagMap[entity.type];
+    const compiledTag0 = template(tag[0])(entity.data);
+    const compiledTag1 = template(tag[1])(entity.data);
 
     if (!tagInsertMap[range.offset]) { tagInsertMap[range.offset] = []; }
     tagInsertMap[range.offset].push(compiledTag0);
@@ -146,18 +144,12 @@ export default function processInlineStylesAndEntities(inlineTagMap, entityTagMa
   */
 
   // sort on position, as we'll need to keep track of offset
-  let orderedKeys = Object.keys(tagInsertMap).sort(function(a, b) {
-    a = Number(a);
-    b = Number(b);
-    if (a > b) { return 1; }
-    if (a < b) { return -1; }
-    return 0;
-  });
+  const orderedKeys = Object.keys(tagInsertMap).sort(compareNums);
 
   // insert tags into string, keep track of offset caused by our text insertions
   let offset = 0;
   orderedKeys.forEach(function(pos) {
-    let index = Number(pos);
+    const index = Number(pos);
 
     tagInsertMap[pos].forEach(function(tag) {
 
