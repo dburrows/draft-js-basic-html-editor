@@ -1,4 +1,4 @@
-# draft-js-BasicHtmlEditor
+# draft-js-BasicHtmlEditor - An Amazing Project
 Basic HTML editor using draft.js - html in, html out
 
 Proof of concept currently, not production ready! PR's welcome.
