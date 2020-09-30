@@ -5,19 +5,19 @@ Proof of concept currently, not production ready! PR's welcome.
 
 Extends the Rich example from the Draft repo to accept html as its input format, and return html to an `onChange` handler.
 
-### Tag Support
+###1. Tag Support
 
 Block tags: `<p> <h1> <h2> <blockquote> <ul> <ol> <code>`
 
 Inline tags: `<strong> <em> <u> <code> <del>`
 
-### Install
+###2. Install
 
 `$ npm install draft-js-basic-html-editor`
 
 Note: You'll also need to install `react` and `react-dom` if you don't already have them
 
-#### Webpack
+####2.1 Webpack
 
 The component is built without `react` or `react-dom` so you'll need to make sure that Webpack can resolve copies of both those modules. Either add your projects `node_modules` as fallback path:
 
@@ -38,7 +38,7 @@ resolve: {
   }
 ```
 
-### Usage 
+###3. Usage 
 
 ```js
 
@@ -58,16 +58,16 @@ const MyEditor = () => {
 }
 ```
 
-### Demo
+###4. Demo
 
 http://dburrows.github.io/draft-js-basic-html-editor/example-dist/
 
-#### Development
+####4.1 Development
 
     $ npm install
     $ webpack-dev-server
 
-#### To Do
+####4.2 To Do
 
 * Block support ✔️
 * Inline tag support ✔️
