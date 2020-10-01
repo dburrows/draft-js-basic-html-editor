@@ -1,9 +1,9 @@
 # draft-js-BasicHtmlEditor
-Basic HTML editor using draft.js - html in, html out
+Basic HTML editor using draft.js - HTML in, HTML out
 
 Proof of concept currently, not production ready! PR's welcome.
 
-Extends the Rich example from the Draft repo to accept html as its input format, and return html to an `onChange` handler.
+Extends the Rich example from the Draft repo to accept HTML as its input format, and return HTML to an `onChange` handler.
 
 ### Tag Support
 
